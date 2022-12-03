@@ -26,7 +26,8 @@ const SensorChart = () => {
         ...data,
         {
           id: message.date,
-          sensorData: message.sensorData,
+          SpO2: message.SpO2,
+          hearRate: message.hearRate,
         },
       ];
       console.log(newDataArray);
@@ -46,7 +47,8 @@ const SensorChart = () => {
         ...currentData,
         {
           id: message.date,
-          sensorData: message.sensorData,
+          SpO2: message.SpO2,
+          hearRate: message.hearRate,
         },
       ];
     }
@@ -56,6 +58,8 @@ const SensorChart = () => {
       ws.current.close();
     };
   }, []);
+
+  console.log(data);
 
   //Display the chart using rechart.js
   return (
@@ -71,7 +75,7 @@ const SensorChart = () => {
                 <LineChart
                   width={800}
                   height={400}
-                  data={data}
+                  data={data.SpO2}
                   margin={{
                     top: 0,
                     right: 0,
@@ -107,7 +111,7 @@ const SensorChart = () => {
                 <LineChart
                   width={800}
                   height={400}
-                  data={data}
+                  data={data.hearRate}
                   margin={{
                     top: 0,
                     right: 0,
