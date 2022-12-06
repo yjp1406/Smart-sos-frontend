@@ -5,7 +5,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 import { Row, Container } from "react-bootstrap";
@@ -16,21 +15,21 @@ const SensorChart = () => {
 
   useEffect(() => {
     //Send request to our websocket server using the "/request" path
-    ws.current = new WebSocket("ws://smart-sos.herokuapp.com/request");
+    ws.current = new WebSocket("ws://octopus-app-dy9ew.ondigitalocean.app/request");
 
     ws.current.onmessage = (ev) => {
       const message = JSON.parse(ev.data);
-      console.log(`Received message :: ${message.sensorData}`);
+      // console.log(`Received message :: ${message.sensorData}`);
       // Upon receiving websocket message then add it to the list of data that we are displaying
       let newDataArray = [
         ...data,
         {
           id: message.date,
-          SpO2: message.SpO2,
-          hearRate: message.hearRate,
+          sensorData: message.SpO2,
+          heartRate: message.heartRate,
         },
       ];
-      console.log(newDataArray);
+      // console.log(newDataArray);
       setData((currentData) => limitData(currentData, message));
     };
     ws.current.onclose = (ev) => {
@@ -47,8 +46,8 @@ const SensorChart = () => {
         ...currentData,
         {
           id: message.date,
-          SpO2: message.SpO2,
-          hearRate: message.hearRate,
+          sensorData: message.SpO2,
+          heartRate: message.heartRate,
         },
       ];
     }
@@ -67,7 +66,7 @@ const SensorChart = () => {
       <div className="lg:w-5/12">
         <Container className="py-3 space-y-10">
           <h1 className="font-bold flex justify-center text-xl">
-            Heart Rate
+            SpO2
           </h1>
           <Row className="justify-content-md-center">
             <div style={{ width: 1000, height: 400 }}>
@@ -75,7 +74,7 @@ const SensorChart = () => {
                 <LineChart
                   width={800}
                   height={400}
-                  data={data.SpO2}
+                  data={data}
                   margin={{
                     top: 0,
                     right: 0,
@@ -88,10 +87,11 @@ const SensorChart = () => {
                   <YAxis />
                   <Tooltip />
                   <Line
-                    type="monotone"
-                    stroke="#8884d8"
-                    activeDot={{ r: 24 }}
-                    strokeWidth="4"
+                  type="monotone"
+                dataKey="sensorData"
+                stroke="#8884d8"
+                activeDot={{ r: 24 }}
+                strokeWidth="4"
                   />
                   {/* <Line type="monotone" dataKey="uv" stroke="#82ca9d" /> */}
                 </LineChart>
@@ -103,7 +103,7 @@ const SensorChart = () => {
       <div className="lg:w-5/12">
       <Container className="py-3 space-y-10">
           <h1 className="font-bold flex justify-center text-xl">
-            SPO2
+            Heart Rate
           </h1>
           <Row className="justify-content-md-center">
             <div style={{ width: 1000, height: 400 }}>
@@ -111,7 +111,7 @@ const SensorChart = () => {
                 <LineChart
                   width={800}
                   height={400}
-                  data={data.hearRate}
+                  data={data}
                   margin={{
                     top: 0,
                     right: 0,
@@ -119,13 +119,13 @@ const SensorChart = () => {
                     bottom: 0,
                   }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
+                  {/* <CartesianGrid strokeDasharray="3 3" /> */}
                   {/* <XAxis dataKey="date" /> */}
                   <YAxis />
                   <Tooltip />
                   <Line
                     type="monotone"
-                    dataKey="sensorData"
+                    dataKey="heartRate"
                     stroke="#8884d8"
                     activeDot={{ r: 24 }}
                     strokeWidth="4"
